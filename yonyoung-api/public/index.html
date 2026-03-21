@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>연영회 API</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap");
+
+      :root {
+        --bg-primary: #fff;
+        --bg-secondary: #f7f9fc;
+        --text-primary: #2c3357;
+        --text-muted: #666;
+        --surface-border: #bfbfbf;
+        --surface-strong-border: #333;
+        --accent: #2c3357;
+        --accent-foreground: #fff;
+        --ok: #116149;
+        --warn: #9d3f10;
+        --error: #8f2020;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        color: var(--text-primary);
+        background:
+          radial-gradient(circle at 14% -10%, #f1f4ff 0%, transparent 42%),
+          radial-gradient(circle at 92% -4%, #eef3ff 0%, transparent 38%),
+          var(--bg-primary);
+      }
+
+      .page {
+        width: min(1040px, 100%);
+        margin: 0 auto;
+        padding: 40px 20px 56px;
+      }
+
+      .hero {
+        border: 1px solid var(--surface-border);
+        background: var(--bg-secondary);
+        padding: 28px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      h1 {
+        margin: 12px 0 0;
+        font-size: clamp(2.2rem, 6.5vw, 3.8rem);
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .lead {
+        margin: 18px 0 0;
+        max-width: 680px;
+        color: var(--text-muted);
+        font-size: clamp(0.95rem, 2.3vw, 1.07rem);
+        line-height: 1.74;
+      }
+
+      .hero-actions {
+        margin-top: 22px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn,
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        font-size: 0.89rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border: 1px solid var(--surface-strong-border);
+        cursor: pointer;
+        font-weight: 700;
+        transition: background-color 180ms ease, color 180ms ease, opacity 180ms ease;
+      }
+
+      .btn {
+        background: var(--accent);
+        color: var(--accent-foreground);
+      }
+
+      .btn:hover {
+        background: #1d2340;
+      }
+
+      .btn-secondary {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-secondary);
+      }
+
+      .section {
+        margin-top: 16px;
+        border: 1px solid var(--surface-border);
+        background: var(--bg-primary);
+        padding: 20px;
+      }
+
+      .error-banner {
+        border-color: #ebc4c4;
+        background: #fff8f8;
+      }
+
+      .error-label {
+        margin: 0;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--error);
+      }
+
+      .error-message {
+        margin: 8px 0 0;
+        color: #5d2525;
+        font-size: 0.95rem;
+        line-height: 1.58;
+        word-break: break-word;
+      }
+
+      .status-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.22rem;
+        letter-spacing: -0.01em;
+        font-weight: 700;
+      }
+
+      .status-summary {
+        margin: 10px 0 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+      }
+
+      .status-grid {
+        margin: 16px 0 0;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stat {
+        border: 1px solid var(--surface-border);
+        background: var(--bg-secondary);
+        padding: 12px;
+      }
+
+      .stat dt {
+        margin: 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+
+      .stat dd {
+        margin: 8px 0 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
+      }
+
+      .state-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 112px;
+        padding: 8px 12px;
+        border: 1px solid var(--surface-strong-border);
+        background: var(--bg-primary);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .state-pill[data-state="healthy"] {
+        color: var(--ok);
+        border-color: color-mix(in srgb, var(--ok) 50%, #ffffff);
+        background: #f0faf6;
+      }
+
+      .state-pill[data-state="unhealthy"] {
+        color: var(--error);
+        border-color: color-mix(in srgb, var(--error) 54%, #ffffff);
+        background: #fff4f4;
+      }
+
+      .state-pill[data-state="unknown"] {
+        color: var(--warn);
+        border-color: color-mix(in srgb, var(--warn) 54%, #ffffff);
+        background: #fff8f0;
+      }
+
+      .status-meta {
+        margin: 14px 0 0;
+        display: grid;
+        gap: 6px;
+      }
+
+      .meta-row {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+      }
+
+      .links-grid {
+        margin: 14px 0 0;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .link-card {
+        display: block;
+        text-decoration: none;
+        border: 1px solid var(--surface-border);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 12px;
+        transition: transform 180ms ease, border-color 180ms ease;
+      }
+
+      .link-card:hover {
+        transform: translateY(-1px);
+        border-color: var(--surface-strong-border);
+      }
+
+      .link-label {
+        margin: 0;
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+
+      .link-title {
+        margin: 8px 0 0;
+        font-size: 0.97rem;
+        font-weight: 700;
+      }
+
+      .footer {
+        margin: 14px 0 0;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+        letter-spacing: 0.05em;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      @media (max-width: 840px) {
+        .status-grid,
+        .links-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .page {
+          padding: 24px 14px 36px;
+        }
+
+        .hero,
+        .section {
+          padding: 16px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+        }
+
+        .btn,
+        .btn-secondary {
+          width: 100%;
+        }
+
+        .status-head {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .status-grid,
+        .links-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .state-pill {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Yonsei University Photography Club API</p>
+        <h1 id="hero-title">연영회 API</h1>
+        <p class="lead">
+          연영회 API 서비스 상태 페이지입니다. 브라우저에서 간단히 오류 메시지와 헬스 체크
+          결과를 확인할 수 있습니다.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="https://yonyoung.yonsei.ac.kr" target="_blank" rel="noreferrer noopener"
+            >연영회 메인 사이트</a
+          >
+          <a class="btn-secondary" href="/api/docs">API 문서 보기</a>
+        </div>
+      </section>
+
+      <section id="error-banner" class="section error-banner" role="status" aria-live="polite" hidden>
+        <p class="error-label">Request Error</p>
+        <p id="error-message" class="error-message"></p>
+      </section>
+
+      <section class="section" data-health-endpoint="/health" aria-labelledby="health-title">
+        <div class="status-head">
+          <h2 id="health-title">API 상태</h2>
+          <button id="health-refresh-btn" class="btn-secondary" type="button">상태 새로고침</button>
+        </div>
+        <p id="health-summary-text" class="status-summary">헬스 체크를 준비하고 있습니다.</p>
+
+        <div class="status-grid" aria-live="polite">
+          <dl class="stat">
+            <dt>Overall</dt>
+            <dd>
+              <span id="health-overall" class="state-pill" data-state="unknown">UNKNOWN</span>
+            </dd>
+          </dl>
+          <dl class="stat">
+            <dt>Total Checks</dt>
+            <dd id="health-total">-</dd>
+          </dl>
+          <dl class="stat">
+            <dt>Healthy</dt>
+            <dd id="health-healthy">-</dd>
+          </dl>
+          <dl class="stat">
+            <dt>Unhealthy</dt>
+            <dd id="health-unhealthy">-</dd>
+          </dl>
+          <dl class="stat">
+            <dt>Skipped</dt>
+            <dd id="health-skipped">-</dd>
+          </dl>
+          <dl class="stat">
+            <dt>Duration (ms)</dt>
+            <dd id="health-duration">-</dd>
+          </dl>
+        </div>
+
+        <div class="status-meta">
+          <p id="health-checked-at" class="meta-row">체크 시각: -</p>
+          <p id="health-last-updated" class="meta-row">마지막 갱신: -</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="quick-links-title">
+        <h2 id="quick-links-title">바로가기</h2>
+        <p class="status-summary">자주 사용하는 엔드포인트와 리소스로 이동할 수 있습니다.</p>
+        <div class="links-grid">
+          <a class="link-card" href="/api/docs">
+            <p class="link-label">Docs</p>
+            <p class="link-title">API Reference UI</p>
+          </a>
+          <a class="link-card" href="/api/openapi.json">
+            <p class="link-label">OpenAPI</p>
+            <p class="link-title">OpenAPI JSON</p>
+          </a>
+          <a class="link-card" href="/health">
+            <p class="link-label">Health</p>
+            <p class="link-title">Raw Health JSON</p>
+          </a>
+        </div>
+        <p class="footer">© 2026 연세대학교 중앙사진동아리 연영회 API</p>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const MAX_ERROR_LENGTH = 300;
+
+        const errorBanner = document.getElementById("error-banner");
+        const errorMessage = document.getElementById("error-message");
+
+        const refreshButton = document.getElementById("health-refresh-btn");
+        const healthSummaryText = document.getElementById("health-summary-text");
+        const healthOverall = document.getElementById("health-overall");
+        const healthTotal = document.getElementById("health-total");
+        const healthHealthy = document.getElementById("health-healthy");
+        const healthUnhealthy = document.getElementById("health-unhealthy");
+        const healthSkipped = document.getElementById("health-skipped");
+        const healthDuration = document.getElementById("health-duration");
+        const healthCheckedAt = document.getElementById("health-checked-at");
+        const healthLastUpdated = document.getElementById("health-last-updated");
+
+        const healthContainer = document.querySelector("[data-health-endpoint]");
+        const healthEndpoint =
+          healthContainer?.getAttribute("data-health-endpoint") || "/health";
+
+        const toDisplayText = (value) => {
+          if (typeof value !== "string") {
+            return "";
+          }
+
+          const normalized = value.trim();
+          if (normalized.length === 0) {
+            return "";
+          }
+
+          if (normalized.length <= MAX_ERROR_LENGTH) {
+            return normalized;
+          }
+
+          return `${normalized.slice(0, MAX_ERROR_LENGTH)}...`;
+        };
+
+        const readErrorFromQuery = () => {
+          const params = new URLSearchParams(window.location.search);
+          return toDisplayText(params.get("error") || "");
+        };
+
+        const formatTimestamp = (input) => {
+          const date = new Date(input);
+          if (Number.isNaN(date.getTime())) {
+            return "-";
+          }
+          return date.toLocaleString("ko-KR", { hour12: false });
+        };
+
+        const setLoading = (isLoading) => {
+          if (!(refreshButton instanceof HTMLButtonElement)) {
+            return;
+          }
+          refreshButton.disabled = isLoading;
+          refreshButton.style.opacity = isLoading ? "0.7" : "1";
+          refreshButton.textContent = isLoading ? "조회 중..." : "상태 새로고침";
+        };
+
+        const setOverallState = (state) => {
+          if (!healthOverall) {
+            return;
+          }
+          healthOverall.dataset.state = state;
+          healthOverall.textContent = state.toUpperCase();
+        };
+
+        const renderUnknown = (message) => {
+          setOverallState("unknown");
+          if (healthSummaryText) {
+            healthSummaryText.textContent = message;
+          }
+          if (healthTotal) healthTotal.textContent = "-";
+          if (healthHealthy) healthHealthy.textContent = "-";
+          if (healthUnhealthy) healthUnhealthy.textContent = "-";
+          if (healthSkipped) healthSkipped.textContent = "-";
+          if (healthDuration) healthDuration.textContent = "-";
+          if (healthCheckedAt) healthCheckedAt.textContent = "체크 시각: -";
+        };
+
+        const isHealthResponse = (value) => {
+          if (!value || typeof value !== "object") {
+            return false;
+          }
+
+          const candidate = value;
+          return (
+            typeof candidate.status === "string" &&
+            typeof candidate.checkedAt === "string" &&
+            typeof candidate.durationMs === "number" &&
+            candidate.summary &&
+            typeof candidate.summary.total === "number" &&
+            typeof candidate.summary.healthy === "number" &&
+            typeof candidate.summary.unhealthy === "number" &&
+            typeof candidate.summary.skipped === "number"
+          );
+        };
+
+        const renderHealth = (report) => {
+          const status = report.status === "healthy" ? "healthy" : "unhealthy";
+          setOverallState(status);
+
+          if (healthSummaryText) {
+            healthSummaryText.textContent =
+              status === "healthy"
+                ? "모든 필수 체크가 정상입니다."
+                : "일부 인프라 체크가 실패했습니다. 상세 로그를 확인해주세요.";
+          }
+
+          if (healthTotal) healthTotal.textContent = String(report.summary.total);
+          if (healthHealthy) healthHealthy.textContent = String(report.summary.healthy);
+          if (healthUnhealthy) healthUnhealthy.textContent = String(report.summary.unhealthy);
+          if (healthSkipped) healthSkipped.textContent = String(report.summary.skipped);
+          if (healthDuration) healthDuration.textContent = String(report.durationMs);
+          if (healthCheckedAt) {
+            healthCheckedAt.textContent = `체크 시각: ${formatTimestamp(report.checkedAt)}`;
+          }
+        };
+
+        const updateLastUpdated = () => {
+          if (!healthLastUpdated) {
+            return;
+          }
+          healthLastUpdated.textContent = `마지막 갱신: ${formatTimestamp(new Date().toISOString())}`;
+        };
+
+        const fetchHealth = async () => {
+          setLoading(true);
+          if (healthSummaryText) {
+            healthSummaryText.textContent = "헬스 체크를 조회 중입니다...";
+          }
+
+          try {
+            const response = await fetch(healthEndpoint, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              cache: "no-store",
+            });
+
+            const payload = await response.json();
+            if (!isHealthResponse(payload)) {
+              throw new Error("헬스 체크 응답 형식이 올바르지 않습니다.");
+            }
+
+            if (response.status !== 200 && response.status !== 503) {
+              throw new Error(`헬스 체크 응답 코드가 예상과 다릅니다: ${response.status}`);
+            }
+
+            renderHealth(payload);
+            updateLastUpdated();
+          } catch (error) {
+            renderUnknown("헬스 체크를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+            updateLastUpdated();
+            if (typeof console !== "undefined") {
+              console.error("health check fetch failed", error);
+            }
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        const errorFromQuery = readErrorFromQuery();
+        if (errorFromQuery && errorBanner && errorMessage) {
+          errorBanner.hidden = false;
+          errorMessage.textContent = errorFromQuery;
+        }
+
+        if (refreshButton instanceof HTMLButtonElement) {
+          refreshButton.addEventListener("click", () => {
+            void fetchHealth();
+          });
+        }
+
+        void fetchHealth();
+      })();
+    </script>
+  </body>
+</html>

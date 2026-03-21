@@ -1,0 +1,48 @@
+{
+	"name": "yonyoung-api",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "pnpm run db:migrate:local && wrangler dev --env dev",
+		"deploy": "wrangler deploy --minify",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
+		"lint": "eslint src --max-warnings 0",
+		"typecheck": "tsc --noEmit",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate:local": "wrangler d1 migrations apply yonyoung-db --local",
+		"db:migrate:remote": "wrangler d1 migrations apply yonyoung-db --remote",
+		"db:studio": "drizzle-kit studio",
+		"check-types": "pnpm run typecheck",
+		"test:node": "vitest run",
+		"test:workers": "vitest run -c vitest.workers.config.ts",
+		"test": "pnpm run test:node && pnpm run test:workers",
+		"test:integration": "vitest run src/tests/worker.runtime.integration.test.ts",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@aws-sdk/client-s3": "^3.1007.0",
+		"@aws-sdk/s3-request-presigner": "^3.1007.0",
+		"@hono/zod-openapi": "^1.2.2",
+		"@scalar/hono-api-reference": "^0.9.48",
+		"better-auth": "^1.5.5",
+		"dotenv": "^17.3.1",
+		"drizzle-orm": "^0.45.1",
+		"hono": "^4.12.7",
+		"web-push": "^3.6.7",
+		"xss": "^1.0.15",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.10.15",
+		"@eslint/js": "^10.0.1",
+		"@types/node": "^25.5.0",
+		"@types/web-push": "^3.6.4",
+		"@vitest/coverage-v8": "^3.2.4",
+		"drizzle-kit": "^0.31.9",
+		"eslint": "^9.39.4",
+		"typescript-eslint": "^8.57.0",
+		"vitest": "^3.2.4",
+		"wrangler": "^4.72.0"
+	}
+}

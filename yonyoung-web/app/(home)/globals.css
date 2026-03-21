@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --public-header-height-mobile: 72px;
+  --public-header-height-desktop: 80px;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f9fc;
+  --surface-elevated: #ffffff;
+  --surface-muted: #f2f5fb;
+  --surface-border: #bfbfbf;
+  --surface-strong-border: #333333;
+  --text-primary: #2c3357;
+  --text-secondary: #4e556e;
+  --text-muted: #666666;
+  --accent: #2c3357;
+  --accent-foreground: #ffffff;
+  --shadow-strong: rgba(44, 51, 87, 0.1);
+  --footer-bg: #1a1a1a;
+  --footer-text: #ffffff;
+  --footer-muted: #999999;
+}
+
+.dark {
+  --bg-primary: #0d0f12;
+  --bg-secondary: #12151a;
+  --surface-elevated: #171b21;
+  --surface-muted: #1d232b;
+  --surface-border: #303845;
+  --surface-strong-border: #465162;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d2d7df;
+  --text-muted: #a4acb8;
+  --accent: #cfd6e2;
+  --accent-foreground: #11151b;
+  --shadow-strong: rgba(0, 0, 0, 0.48);
+  --footer-bg: #0b0d11;
+  --footer-text: #f3f4f6;
+  --footer-muted: #97a0ad;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR",
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :where(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.exhibition-description,
+.record-description {
+  color: var(--text-secondary);
+}
+
+.exhibition-description h1,
+.record-description h1,
+.exhibition-description h2,
+.record-description h2,
+.exhibition-description h3,
+.record-description h3,
+.exhibition-description h4,
+.record-description h4,
+.exhibition-description h5,
+.record-description h5,
+.exhibition-description h6,
+.record-description h6,
+.exhibition-description strong,
+.record-description strong {
+  color: var(--text-primary);
+}
+
+.exhibition-description p,
+.record-description p,
+.exhibition-description li,
+.record-description li,
+.exhibition-description td,
+.record-description td,
+.exhibition-description th,
+.record-description th,
+.exhibition-description blockquote,
+.record-description blockquote {
+  color: var(--text-secondary);
+}
+
+.exhibition-description a,
+.record-description a {
+  color: var(--text-primary);
+}
+
+.recruiting-rich-text-contrast p,
+.recruiting-rich-text-contrast li,
+.recruiting-rich-text-contrast span,
+.recruiting-rich-text-contrast small,
+.recruiting-rich-text-contrast strong,
+.recruiting-rich-text-contrast em,
+.recruiting-rich-text-contrast h2,
+.recruiting-rich-text-contrast h3,
+.recruiting-rich-text-contrast td,
+.recruiting-rich-text-contrast th,
+.recruiting-rich-text-contrast blockquote {
+  color: #000000 !important;
+}
+
+.dark .recruiting-rich-text-contrast p,
+.dark .recruiting-rich-text-contrast li,
+.dark .recruiting-rich-text-contrast span,
+.dark .recruiting-rich-text-contrast small,
+.dark .recruiting-rich-text-contrast strong,
+.dark .recruiting-rich-text-contrast em,
+.dark .recruiting-rich-text-contrast h2,
+.dark .recruiting-rich-text-contrast h3,
+.dark .recruiting-rich-text-contrast td,
+.dark .recruiting-rich-text-contrast th,
+.dark .recruiting-rich-text-contrast blockquote {
+  color: #e2e8f0 !important;
+}
+
+.recruiting-rich-text-contrast a {
+  color: #1447e6 !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.dark .recruiting-rich-text-contrast a {
+  color: #90c5ff !important;
+}
